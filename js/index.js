@@ -5,5 +5,13 @@ const loadCategories = async() =>{
     return data;
 }
 
+const displayCategories = async(AllNews)=>{
+    console.log(AllNews);
+    AllNews.forEach(singleNews => {
+        
+        const {category_id, category_name} = singleNews;
+        console.log(category_name)
+    });
+}
 
 loadCategories();
