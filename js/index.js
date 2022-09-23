@@ -6,12 +6,9 @@ const loadCategories = async() =>{
 }
 
 const displayCategories = async(AllNews)=>{
-    console.log(AllNews);
     const categoryContainer = document.getElementById('category-container');
     AllNews.forEach(singleNews => {
-        
         const {category_id, category_name} = singleNews;
-        // console.log(category_name)
         const li = document.createElement('li');
         li.innerHTML = `
         <a class="nav-link active" aria-current="page" href="#">${category_name}</a>
@@ -26,24 +23,15 @@ loadCategories();
 const loadNewsDetail = async category_id =>{
     const res = await fetch('https://openapi.programming-hero.com/api/news/category/02');
     const data = await res.json();
-    console.log(data);
     return data;
 }
 
 const displayLoadDetails = async() =>{
     const data = await loadNewsDetail();
     const singleNews = data.data.forEach(singleNews =>{
-        console.log(singleNews);
+        // console.log(singleNews);
         const {title, image_url, details, rating,thumbnail_url, total_view, _id, author, } = singleNews;
-        console.log('title', title);
-        console.log('image url', image_url);
-        console.log('details', details);
-        console.log('rating', rating);
-        console.log('thumbnail_url', thumbnail_url);
-        console.log('total_view', total_view);
-        console.log('_id', _id);
-        console.log('author', author);
-        console.log(author.published_date, 'publish date')
+       
         const newsDetail = document.getElementById('news-detail');
         const newsDiv = document.createElement('div');
         newsDiv.classList.add('row', 'g-5', 'mb-4')
@@ -82,7 +70,7 @@ const displayLoadDetails = async() =>{
                 <span><i class="fa-sharp fa-solid fa-arrow-right"></i></span>
             </div>
             <div class="text-center">
-                <div class="btn btn-primary w-25 mt-4 text-center">Details</div>
+                <div onclick="showModal()" class="btn btn-primary w-25 mt-4 text-center" data-bs-toggle="modal" data-bs-target="#exampleModal">Details</div>
             </div>
           </div>
         </div>
@@ -92,5 +80,40 @@ const displayLoadDetails = async() =>{
     })
 }
 
+const showModal = async(id) =>{
+  const res =  await fetch('https://openapi.programming-hero.com/api/news/0282e0e58a5c404fbd15261f11c2ab6a');
+  const data = await  res.json();
+  // console.log(data);
+  return data;
+}
 
-displayLoadDetails();
+const displayModal = async() =>{
+  const data = await showModal();
+
+  const modalBody = document.getElementById('modal-body');
+  data.data.forEach(singleNews =>{
+    console.log(singleNews);
+    const {author, title, details, rating, image_url} = singleNews;
+   
+    const {name, published_date, img} = author;
+      modalBody.innerHTML = `
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">${title}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div  class="modal-body">
+        <h3>${name}</h3> 
+        <p>${published_date} </p> </br>
+        <p>${details} </p>
+      </div>
+      
+    </div>
+      `
+  })
+}
+
+showModal();
+
+displayModal();
+displayLoadDetails()
